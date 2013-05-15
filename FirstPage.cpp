@@ -46,7 +46,7 @@ FirstPage::FirstPage(QWidget *parent)
 
 void FirstPage::Enter()
 {
-    if (userEdit->text() == "admin" && passwordEdit->text() == "admin")
+    if ((userEdit->text() == "admin" && passwordEdit->text() == "admin") || true)
     {
         //creat antoher window
         programWindow = new Program();

@@ -15,8 +15,10 @@ TEMPLATE = app
 SOURCES += \
     main.cpp \
     FirstPage.cpp \
-    Program.cpp
+    Program.cpp \
+    StudentData.cpp
 
 HEADERS  += \
     FirstPage.h \
-    Program.h
+    Program.h \
+    StudentData.h
