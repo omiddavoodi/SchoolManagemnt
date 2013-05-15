@@ -1,4 +1,5 @@
 #include "FirstPage.h"
+#include "sqlHandler.h"
 #include <QDebug>
 #include <QHBoxLayout>
 
@@ -46,7 +47,9 @@ FirstPage::FirstPage(QWidget *parent)
 
 void FirstPage::Enter()
 {
-    if ((userEdit->text() == "admin" && passwordEdit->text() == "admin") || true)
+    sqlHandler sql;
+
+    if (sql.isPerson(userEdit->text(), passwordEdit->text()))
     {
         //creat antoher window
         programWindow = new Program();
@@ -59,5 +62,5 @@ void FirstPage::Enter()
 
 FirstPage::~FirstPage()
 {
-    
+
 }

@@ -11,7 +11,14 @@
 #include <QTabBar>
 #include <QComboBox>
 #include <QGroupBox>
-#include "StudentData.h"
+#include "sqlHandler.h"
+#include <QInputDialog>
+
+struct SClass
+{
+    int teacherID;
+    std::vector<int> studentID;
+};
 
 class Program : public QWidget
 {
@@ -20,7 +27,9 @@ class Program : public QWidget
 public:
     Program(QWidget* parent = 0);
 
-    StudentData* StuData;
+
+    sqlHandler sql;
+    std::vector<SClass> classes;
 
     QTabBar* userTab;
     QGridLayout* layout;
@@ -45,14 +54,18 @@ public:
     QComboBox* studentsCombo;
     QPushButton* btnAddStudent;
     QPushButton* btnRemoveStudent;
-    QPushButton* btnShowStudentData;
     QPushButton* btnScoring;
     QComboBox* coursesCombo;
 
     ~Program();
 
 public slots:
-    void ShowStuData();
+    void UpdateTeacherData();
+    void bindTeacher();
+    void UpdateStudentData();
+    void bindStudent();
+    void addNewStudent();
+    void removeCurrentStudent();
 };
 
 #endif // PROGRAM_H
