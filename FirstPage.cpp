@@ -49,10 +49,11 @@ void FirstPage::Enter()
 {
     sqlHandler sql;
 
-    if (sql.isPerson(userEdit->text(), passwordEdit->text()))
+    int result = sql.isPerson(userEdit->text(), passwordEdit->text());
+    if (result > 0)
     {
         //creat antoher window
-        programWindow = new Program();
+        programWindow = new Program(sql.isAdmin(result),sql.getTeacherClass(result));
         //show another window
         programWindow->show();
         //close FirstPage window

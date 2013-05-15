@@ -13,6 +13,11 @@ private:
     QSqlDatabase db;
 public:
     int maxStudents;
+    void mycommit()
+    {
+        db.commit();
+    }
+
     void initialize()
     {
         maxStudents = 0;
@@ -42,10 +47,13 @@ public:
         if (isFirst)
         {
             qDebug() << "First Iinitialize!";
-            query.exec("insert into password values(0, 'admin', 'admin', 1)");
-            query.exec("INSERT INTO person values(1, 'قولتوق', 2, -1)");
-            query.exec("INSERT INTO person values(2, 'زالو', 2, -1)");
-            query.exec("INSERT INTO person values(3, 'پشمک', 2, -1)");
+            query.exec("insert into password values(1, 'admin', 'admin', 1)");
+            query.exec("insert into password values(2, 'gholtogh', 'pedar dar biar', 0)");
+            query.exec("insert into password values(3, 'zaalooo', 'reza xerse xaste', 0)");
+            query.exec("insert into password values(4, 'pashmak', 'golabi', 0)");
+            query.exec("INSERT INTO person values(2, 'قولتوق', 2, -1)");
+            query.exec("INSERT INTO person values(3, 'زالو', 2, -1)");
+            query.exec("INSERT INTO person values(4, 'پشمک', 2, -1)");
             query.exec("INSERT INTO student values(0, 'هولن', 0, 0, 0, 0, 0, 0, 0, -1)");
             query.exec("INSERT INTO student values(1, 'بیل', 0, 0, 0, 0, 0, 0, 0, -1)");
             query.exec("INSERT INTO student values(2, 'قلیدون', 0, 0, 0, 0, 0, 0, 0, -1)");
@@ -85,18 +93,33 @@ public:
         */
     }
 
-    bool isPerson(QString username,QString password)
+    int isPerson(QString username,QString password)
     {
         QSqlQuery query;
 
-        query.exec("SELECT * FROM password WHERE username='" + username +"' AND password='"
-                   + password + "'");
+        query.prepare("SELECT id FROM password WHERE username=? AND password=?");
+        query.addBindValue(username);
+        query.addBindValue(password);
+        query.exec();
         query.first();
 
-        qDebug() << query.isValid();
-        return query.isValid();
+
+        if(query.isValid())
+            return query.value(0).toInt();
+        else
+            return 0;
     }
 
+    int isAdmin(int id)
+    {
+        QSqlQuery query;
+
+        query.prepare("SELECT state FROM password WHERE id=?");
+        query.addBindValue(id);
+        query.exec();
+        query.first();
+        return query.value(0).toBool();
+    }
 
     void addPerson(int id,QString name,QString lastName,QString username,QString password)
     {
@@ -185,6 +208,21 @@ public:
         query.addBindValue(name);
         query.exec();
         query.first();
+        if (query.isValid())
+            return query.value(0).toInt();
+        else
+            return -2;
+    }
+
+    int getTeacherClass(int id)
+    {
+        if (id == 1)
+            return -2;
+        QSqlQuery query;
+        query.prepare("SELECT classID FROM person WHERE state=2 AND id=?");
+        query.addBindValue(id);
+        query.exec();
+        query.first();
         return query.value(0).toInt();
     }
 
@@ -197,12 +235,19 @@ public:
         return query.exec();
     }
 
-    std::vector<int> getStudentIDs()
+    std::vector<int> getStudentIDs(int current_class)
     {
         std::vector<int> ids;
 
         QSqlQuery query;
-        query.exec("SELECT id FROM student");
+        if (current_class == -2)
+            query.exec("SELECT id FROM student");
+        else
+        {
+            query.prepare("SELECT id FROM student WHERE classID=?");
+            query.addBindValue(current_class);
+            query.exec();
+        }
         query.first();
         int temp = query.value(0).toInt();
         ids.push_back(temp);
@@ -219,12 +264,21 @@ public:
         return ids;
     }
 
-    std::vector<QString> getStudentNames()
+    std::vector<QString> getStudentNames(int current_class)
     {
         std::vector<QString> names;
 
         QSqlQuery query;
-        query.exec("SELECT name FROM student");
+        if (current_class == -2)
+        {
+            query.exec("SELECT name FROM student");
+        }
+        else
+        {
+            query.prepare("SELECT name FROM student WHERE classID=?");
+            query.addBindValue(current_class);
+            query.exec();
+        }
         query.first();
         names.push_back(query.value(0).toString());
         while (query.next())
@@ -260,6 +314,117 @@ public:
         query.prepare("DELETE FROM student WHERE id=?");
         query.addBindValue(id);
         query.exec();
+    }
+
+    float getStudentScore(int id, int course)
+    {
+        QSqlQuery query;
+        if (course == 0)
+        {
+            query.prepare("SELECT mathScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+        else if (course == 1)
+        {
+            query.prepare("SELECT physicsScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+        else if (course == 2)
+        {
+            query.prepare("SELECT literatureScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+        else if (course == 3)
+        {
+            query.prepare("SELECT theologyScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+        else if (course == 4)
+        {
+            query.prepare("SELECT geographyScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+        else if (course == 5)
+        {
+            query.prepare("SELECT chemestryScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+        else if (course == 6)
+        {
+            query.prepare("SELECT disciplinaryScore FROM student WHERE id=?");
+            query.addBindValue(id);
+            query.exec();
+            query.first();
+            return query.value(0).toFloat();
+        }
+    }
+
+    void setStudentScore(int id, int course, float score)
+    {
+        QSqlQuery query;
+        switch (course)
+        {
+            case 0:
+                query.prepare("UPDATE student SET mathScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+            case 1:
+                query.prepare("UPDATE student SET physicsScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+            case 2:
+                query.prepare("UPDATE student SET literatureScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+            case 3:
+                query.prepare("UPDATE student SET theologyScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+            case 4:
+                query.prepare("UPDATE student SET geographyScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+            case 5:
+                query.prepare("UPDATE student SET chemestryScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+            case 6:
+                query.prepare("UPDATE student SET disciplinaryScore=? WHERE id=?");
+                query.addBindValue(score);
+                query.addBindValue(id);
+                query.exec();
+                break;
+        }
     }
 
 };

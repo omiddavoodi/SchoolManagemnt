@@ -14,22 +14,17 @@
 #include "sqlHandler.h"
 #include <QInputDialog>
 
-struct SClass
-{
-    int teacherID;
-    std::vector<int> studentID;
-};
-
 class Program : public QWidget
 {
     Q_OBJECT
 
 public:
-    Program(QWidget* parent = 0);
+    Program(bool isadmin, int userid, QWidget* parent = 0);
 
 
     sqlHandler sql;
-    std::vector<SClass> classes;
+    bool is_admin;
+    int user_id;
 
     QTabBar* userTab;
     QGridLayout* layout;
@@ -49,6 +44,22 @@ public:
     QLabel* label3s;
     QLabel* label4s;
     QLabel* label5s;
+    QLabel* label6s;
+    QLabel* label7s;
+    QLabel* label8s;
+    QLabel* label9s;
+    QLabel* label10s;
+    QLabel* label11s;
+    QLabel* label12s;
+    QLabel* label13s;
+    QLabel* label14s;
+    QLabel* label15s;
+    QLabel* label16s;
+    QLabel* label17s;
+    QLabel* label18s;
+    QLabel* label19s;
+    QLabel* label20s;
+    QLabel* label21s;
     QPushButton* btnAddStudentToClass;
     QComboBox* classSCombo;
     QComboBox* studentsCombo;
@@ -57,6 +68,7 @@ public:
     QPushButton* btnScoring;
     QComboBox* coursesCombo;
 
+    void update_student_scores();
     ~Program();
 
 public slots:
@@ -66,6 +78,7 @@ public slots:
     void bindStudent();
     void addNewStudent();
     void removeCurrentStudent();
+    void setStudentScore();
 };
 
 #endif // PROGRAM_H
