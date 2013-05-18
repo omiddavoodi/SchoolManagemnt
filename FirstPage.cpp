@@ -52,8 +52,9 @@ void FirstPage::Enter()
     int result = sql.isPerson(userEdit->text(), passwordEdit->text());
     if (result > 0)
     {
+        qDebug() << result;
         //creat antoher window
-        programWindow = new Program(sql.isAdmin(result),sql.getTeacherClass(result));
+        programWindow = new Program(sql.isAdmin(result),sql.getTeacherClass(result),result);
         //show another window
         programWindow->show();
         //close FirstPage window

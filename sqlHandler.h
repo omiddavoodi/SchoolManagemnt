@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <vector>
 #include <QStringList>
+
 class sqlHandler
 {
 private:
@@ -51,9 +52,9 @@ public:
             query.exec("insert into password values(3, 'zaalooo', 'reza xerse xaste', 0)");
             query.exec("insert into password values(4, 'pashmak', 'golabi', 0)");
             query.exec("INSERT INTO delay values(0, 4.1)");
-            query.exec("INSERT INTO person values(2, 'قولتوق', 2, -2)");
-            query.exec("INSERT INTO person values(3, 'زالو', 2, -2)");
-            query.exec("INSERT INTO person values(4, 'پشمک', 2, -2)");
+            query.exec("INSERT INTO person values(2, 'قولتوق', 2, -3)");
+            query.exec("INSERT INTO person values(3, 'زالو', 2, -3)");
+            query.exec("INSERT INTO person values(4, 'پشمک', 2, -3)");
             query.exec("INSERT INTO student values(0, 'هولن', 0, 0, 0, 0, 0, 0, 0, -1)");
             query.exec("INSERT INTO student values(1, 'بیل', 0, 0, 0, 0, 0, 0, 0, -1)");
             query.exec("INSERT INTO student values(2, 'قلیدون', 0, 0, 0, 0, 0, 0, 0, -1)");
@@ -121,20 +122,19 @@ public:
         return query.value(0).toBool();
     }
 
-    void addPerson(int id,QString name,QString lastName,QString username,QString password)
+    void addPerson(int id,QString name,QString username,QString password)
     {
         QSqlQuery query;
 
-        query.prepare("insert into password values(?, ?, ?, 2");
+        query.prepare("insert into password values(?, ?, ?, 0)");
         query.addBindValue(id);
         query.addBindValue(username);
         query.addBindValue(password);
         query.exec();
 
-        query.prepare("insert into person values(?, ?, ?, 2");
+        query.prepare("insert into person values(?, ?, 2, -3)");
         query.addBindValue(id);
         query.addBindValue(name);
-        query.addBindValue(lastName);
         query.exec();
     }
 
@@ -158,19 +158,15 @@ public:
     void addDelay(int sId,float delayTime)
     {
         QSqlQuery query;
-        qDebug() << sId << " : " << delayTime;
         query.prepare("INSERT INTO delay values(?, ?)");
         query.addBindValue(sId);
         query.addBindValue(delayTime);
-
         query.exec();
-        qDebug() << sId << " : " << delayTime;
 
         query.prepare("SELECT time FROM delay WHERE id=?");
         query.addBindValue(sId);
         query.exec();
         query.first();
-        qDebug() << sId << " : " << query.value(0).toFloat();
 
 
     }
@@ -184,7 +180,6 @@ public:
         query.addBindValue(sId);
         query.exec();
         query.first();
-        qDebug() << " : " <<query.value(0).toFloat();
 
         if (query.isValid())
         {
@@ -192,7 +187,6 @@ public:
             while (query.next())
             {
                 delays.push_back(query.value(0).toFloat());
-                qDebug() <<query.value(0).toFloat();
 
             }
         }
@@ -255,7 +249,7 @@ public:
         std::vector<int> ids;
 
         QSqlQuery query;
-        if (current_class == -2)
+        if (current_class == -3)
             query.exec("SELECT id FROM student");
         else
         {
@@ -449,6 +443,44 @@ public:
         }
     }
 
+    void changePassword(int id,QString password)
+    {
+        QSqlQuery query;
+        query.prepare("UPDATE password SET password=? WHERE id=?");
+        query.addBindValue(password);
+        query.addBindValue(id);
+        query.exec();
+
+    }
+
+    int getTeacherNumber()
+    {
+        QSqlQuery query;
+        query.exec("SELECT name FROM person");
+        query.first();
+
+        int max = 2;
+
+        while (query.next())
+        {
+            max++;
+        }
+
+        return max;
+    }
+
+    bool isUser(QString user)
+    {
+        QSqlQuery query;
+        qDebug() << user;
+        query.exec("SELECT * FROM password WHERE id=2");
+        //query.addBindValue(user);
+        //query.exec();
+        qDebug() << query.value(0).toString();
+
+        return query.isValid();
+
+    }
 };
 
 #endif

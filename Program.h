@@ -12,6 +12,8 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include "sqlHandler.h"
+#include "addTeacher.h"
+#include "changepassword.h"
 #include <QInputDialog>
 #include <QListWidget>
 
@@ -20,12 +22,13 @@ class Program : public QWidget
     Q_OBJECT
 
 public:
-    Program(bool isadmin, int userid, QWidget* parent = 0);
+    Program(bool isadmin, int userid,int ID, QWidget* parent = 0);
 
 
     sqlHandler sql;
     bool is_admin;
     int user_id;
+    int ID;
 
     QGridLayout* layout;
     QGridLayout* classLayout;
@@ -35,6 +38,7 @@ public:
     QGroupBox* grpTeachers;
     QGroupBox* grpStudents;
     QGroupBox* grpDelays;
+    QGroupBox* grpAdminPanel;
     QLabel* label1;
     QLabel* label2;
     QLabel* label3;
@@ -71,6 +75,10 @@ public:
     QComboBox* coursesCombo;
     QListWidget* delaysList;
     QPushButton* btnTeacherChangePassword;
+    QPushButton* btnAdminChangePassword;
+    QPushButton* btnAddTeacher;
+    AddTeacher* addTeach;
+
 
     void update_student_scores();
     void update_delays();
@@ -84,7 +92,10 @@ public slots:
     void addNewStudent();
     void removeCurrentStudent();
     void setStudentScore();
+    void changeTeacherPassword();
     void addDelay();
+    void addTeacher();
+    void adminChangePassword();
 };
 
 #endif // PROGRAM_H

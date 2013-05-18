@@ -1,7 +1,7 @@
 #include "addTeacher.h"
 
 
-addTeacher::addTeacher(QWidget *parent)
+AddTeacher::AddTeacher(QWidget *parent)
     : QWidget(parent)
 {
     //setting program options
@@ -47,15 +47,15 @@ addTeacher::addTeacher(QWidget *parent)
     connect(enterButton,SIGNAL(clicked()),this,SLOT(submit()));
 }
 
-void addTeacher::submit()
+void AddTeacher::submit()
 {
     sqlHandler sql;
 
     if (userEdit->text().size() > 0 && passwordEdit->text().size() > 0 && nameEdit->text().size() > 0)
     {
-        qDebug() << sql.getTeacherNumber() + 1;
         sql.addPerson(sql.getTeacherNumber() + 1,nameEdit->text(),userEdit->text(),passwordEdit->text());
         sql.mycommit();
         this->close();
     }
+
 }

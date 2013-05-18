@@ -32,7 +32,7 @@ QString getClassName(int id)
     return "هیچ کدام";
 }
 
-Program::Program(bool isadmin, int userid, QWidget *parent)
+Program::Program(bool isadmin, int userid,int _id, QWidget *parent)
     : QWidget(parent)
 {
 
@@ -41,6 +41,7 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
 
     this->is_admin = isadmin;
     this->user_id = userid;
+    this->ID = _id;
     //setting program options
     if (this->is_admin)
         this->setFixedSize(480, 275);
@@ -109,7 +110,7 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
         classCombo->setGeometry(10,72,140,20);
 
         btnAddTeacherToClass = new QPushButton("تخصیص");
-        btnAddTeacherToClass->setGeometry(160, 72, 60, 20);
+        btnAddTeacherToClass->setGeometry(160, 71, 60, 22);
         btnAddTeacherToClass->setParent(grpTeachers);
 
         connect(btnAddTeacherToClass, SIGNAL(clicked()), this, SLOT(bindTeacher()));
@@ -124,6 +125,19 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
 
         delaysList = new QListWidget(grpDelays);
         delaysList->setGeometry(10, 35, 220, 60);
+
+        grpAdminPanel = new QGroupBox(this);
+        grpAdminPanel->setGeometry(245, 210, 233,54);
+
+        btnAdminChangePassword = new QPushButton("تغییر رمز", grpAdminPanel);
+        btnAdminChangePassword->setGeometry(10,1,213,22);
+
+        connect(btnAdminChangePassword, SIGNAL(clicked()), this, SLOT(adminChangePassword()));
+
+        btnAddTeacher = new QPushButton("اضافه کردن معلم", grpAdminPanel);
+        btnAddTeacher->setGeometry(10,27,213,22);
+
+        connect(btnAddTeacher, SIGNAL(clicked()), this, SLOT(addTeacher()));
     }
 
     grpStudents = new QGroupBox(this);
@@ -467,3 +481,23 @@ Program::~Program()
 {
     sql.mycommit();
 }
+
+void Program::changeTeacherPassword()
+{
+    changePassword* c = new changePassword(this->ID);
+    c->show();
+}
+
+void Program::adminChangePassword()
+{
+    changePassword* c = new changePassword(this->ID);
+    c->show();
+}
+
+
+void Program::addTeacher()
+{
+    addTeach = new AddTeacher();
+    addTeach->show();
+}
+

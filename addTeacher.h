@@ -10,7 +10,7 @@
 #include <QPushButton>
 #include "sqlHandler.h"
 
-class addTeacher : public QWidget
+class AddTeacher : public QWidget
 {
     Q_OBJECT
     //layouts
@@ -36,7 +36,7 @@ public slots:
     void submit();
 
 public:
-    addTeacher(QWidget *parent = 0);
+    AddTeacher(QWidget *parent = 0);
 };
 
 #endif // CHANGEPASSWORD_H
