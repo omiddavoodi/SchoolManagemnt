@@ -70,6 +70,7 @@ public:
     QPushButton* btnScoring;
     QComboBox* coursesCombo;
     QListWidget* delaysList;
+    QPushButton* btnTeacherChangePassword;
 
     void update_student_scores();
     void update_delays();

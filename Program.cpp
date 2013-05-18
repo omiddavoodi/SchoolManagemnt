@@ -127,8 +127,10 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
     }
 
     grpStudents = new QGroupBox(this);
-    grpStudents->setGeometry(5, 3, 233,260);
-
+    if (is_admin)
+        grpStudents->setGeometry(5, 3, 233,260);
+    else
+        grpStudents->setGeometry(5, 3, 233,230);
     studentsCombo = new QComboBox();
 
     std::vector<int> ids = sql.getStudentIDs(this->user_id);
@@ -243,30 +245,31 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
 
     update_student_scores();
 
-    classSCombo = new QComboBox();
-    classSCombo->addItem("1/1");
-    classSCombo->addItem("1/2");
-    classSCombo->addItem("2/1");
-    classSCombo->addItem("2/2");
-    classSCombo->addItem("3/1");
-    classSCombo->addItem("3/2");
-    classSCombo->addItem("4/1");
-    classSCombo->addItem("4/2");
-    classSCombo->addItem("5/1");
-    classSCombo->addItem("5/2");
-    classSCombo->addItem("6/1");
-    classSCombo->addItem("6/2");
-    classSCombo->setParent(grpStudents);
-    classSCombo->setGeometry(10,140,140,24);
-
-    btnAddStudentToClass = new QPushButton("تخصیص");
-    btnAddStudentToClass->setGeometry(160, 140, 60, 24);
-    btnAddStudentToClass->setParent(grpStudents);
-
-    connect(btnAddStudentToClass, SIGNAL(clicked()), this, SLOT(bindStudent()));
-
     if (is_admin)
     {
+
+        classSCombo = new QComboBox();
+        classSCombo->addItem("1/1");
+        classSCombo->addItem("1/2");
+        classSCombo->addItem("2/1");
+        classSCombo->addItem("2/2");
+        classSCombo->addItem("3/1");
+        classSCombo->addItem("3/2");
+        classSCombo->addItem("4/1");
+        classSCombo->addItem("4/2");
+        classSCombo->addItem("5/1");
+        classSCombo->addItem("5/2");
+        classSCombo->addItem("6/1");
+        classSCombo->addItem("6/2");
+        classSCombo->setParent(grpStudents);
+        classSCombo->setGeometry(10,140,140,24);
+
+        btnAddStudentToClass = new QPushButton("تخصیص");
+        btnAddStudentToClass->setGeometry(160, 140, 60, 24);
+        btnAddStudentToClass->setParent(grpStudents);
+
+        connect(btnAddStudentToClass, SIGNAL(clicked()), this, SLOT(bindStudent()));
+
         btnAddStudent = new QPushButton("اضافه کردن دانش آموز جدید");
         btnAddStudent->setGeometry(70, 170, 150, 24);
         btnAddStudent->setParent(grpStudents);
@@ -296,14 +299,15 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
     }
     else
     {
+
         btnRemoveStudent = new QPushButton("اخراج دانش آموز کنونی");
-        btnRemoveStudent->setGeometry(70, 170, 150, 24);
+        btnRemoveStudent->setGeometry(70, 140, 150, 24);
         btnRemoveStudent->setParent(grpStudents);
 
         connect(btnRemoveStudent, SIGNAL(clicked()), this, SLOT(removeCurrentStudent()));
 
         btnScoring = new QPushButton("نمره دهی");
-        btnScoring->setGeometry(140, 200, 80, 24);
+        btnScoring->setGeometry(140, 170, 80, 24);
         btnScoring->setParent(grpStudents);
 
         connect(btnScoring, SIGNAL(clicked()), this, SLOT(setStudentScore()));
@@ -318,7 +322,12 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
         coursesCombo->addItem("شیمی", 5);
 
         coursesCombo->setParent(grpStudents);
-        coursesCombo->setGeometry(10,200,120,24);
+        coursesCombo->setGeometry(10,170,120,24);
+
+        btnTeacherChangePassword = new QPushButton("تغییر رمز", grpStudents);
+        btnTeacherChangePassword->setGeometry(70, 200, 150, 24);
+
+        connect(btnTeacherChangePassword, SIGNAL(clicked()), this, SLOT(changeTeacherPassword()));
     }
 }
 
@@ -440,15 +449,16 @@ void Program::addDelay()
 
 void Program::update_delays()
 {
-    delaysList->clear();
-    if (studentsCombo->count() != 0)
+    if (is_admin)
     {
-        std::vector<float> temp = sql.getAllDelays(studentsCombo->itemData(studentsCombo->currentIndex()).toInt());
-
-        for (int i = 0; i < temp.size(); ++i)
+        delaysList->clear();
+        if (studentsCombo->count() != 0)
         {
-
-            delaysList->addItem(QVariant(temp[i]).toString());
+            std::vector<float> temp = sql.getAllDelays(studentsCombo->itemData(studentsCombo->currentIndex()).toInt());
+            for (int i = 0; i < temp.size(); ++i)
+            {
+                delaysList->addItem(QVariant(temp[i]).toString());
+            }
         }
     }
 }
