@@ -37,6 +37,21 @@ public slots:
 
 public:
     AddTeacher(QWidget *parent = 0);
+
+    ~AddTeacher()
+    {
+        delete mainLayout;
+        delete buttonLayout;
+        delete layout;
+        delete userLabel;
+        delete passwordLabel;
+        delete nameLabel;
+        delete userEdit;
+        delete passwordEdit;
+        delete nameEdit;
+        delete enterButton;
+        delete exitButton;
+    };
 };
 
 #endif // CHANGEPASSWORD_H

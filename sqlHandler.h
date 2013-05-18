@@ -52,6 +52,7 @@ public:
             query.exec("insert into password values(3, 'zaalooo', 'reza xerse xaste', 0)");
             query.exec("insert into password values(4, 'pashmak', 'golabi', 0)");
             query.exec("INSERT INTO delay values(0, 4.1)");
+            query.exec("INSERT INTO delay values(1, 4.1)");
             query.exec("INSERT INTO person values(2, 'قولتوق', 2, -3)");
             query.exec("INSERT INTO person values(3, 'زالو', 2, -3)");
             query.exec("INSERT INTO person values(4, 'پشمک', 2, -3)");
@@ -308,13 +309,14 @@ public:
         return query.value(0).toInt();
     }
 
-    bool setStudentClass(int sID, int cID)
+    void setStudentClass(int sID, int cID)
     {
         QSqlQuery query;
         query.prepare("UPDATE student SET classID=? WHERE id=?");
         query.addBindValue(cID);
         query.addBindValue(sID);
-        return query.exec();
+        query.exec();
+        qDebug() << sID << " " << cID;
     }
 
     void removeStudent(int id, bool is_admin)

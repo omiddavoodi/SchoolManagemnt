@@ -30,6 +30,8 @@ public:
     int user_id;
     int ID;
 
+    changePassword* changePass;
+
     QGridLayout* layout;
     QGridLayout* classLayout;
     QComboBox* classCombo;

@@ -373,9 +373,7 @@ void Program::UpdateStudentData()
 
 void Program::bindStudent()
 {
-    bool result = sql.setStudentClass(studentsCombo->itemData(studentsCombo->currentIndex()).toInt(),classSCombo->currentIndex());
-    if (!result)
-        qDebug() << "Hoooooy";
+    sql.setStudentClass(studentsCombo->itemData(studentsCombo->currentIndex()).toInt(),classSCombo->currentIndex());
     UpdateStudentData();
 }
 
@@ -480,18 +478,67 @@ void Program::update_delays()
 Program::~Program()
 {
     sql.mycommit();
+    delete layout;
+    delete classLayout;
+    delete classCombo;
+    delete teachersCombo;
+    delete btnAddTeacherToClass;
+    delete grpTeachers;
+    delete grpStudents;
+    delete grpDelays;
+    delete grpAdminPanel;
+    delete label1;
+    delete label2;
+    delete label3;
+    delete label4;
+    delete label5;
+    delete label1s;
+    delete label2s;
+    delete label3s;
+    delete label4s;
+    delete label5s;
+    delete label6s;
+    delete label7s;
+    delete label8s;
+    delete label9s;
+    delete label10s;
+    delete label11s;
+    delete label12s;
+    delete label13s;
+    delete label14s;
+    delete label15s;
+    delete label16s;
+    delete label17s;
+    delete label18s;
+    delete label19s;
+    delete label20s;
+    delete label21s;
+    delete btnAddStudentToClass;
+    delete btnFileDelayForStudent;
+    delete classSCombo;
+    delete studentsCombo;
+    delete btnAddStudent;
+    delete btnRemoveStudent;
+    delete btnScoring;
+    delete coursesCombo;
+    delete delaysList;
+    delete btnTeacherChangePassword;
+    delete btnAdminChangePassword;
+    delete btnAddTeacher;
+    delete addTeach;
+    delete changePass;
 }
 
 void Program::changeTeacherPassword()
 {
-    changePassword* c = new changePassword(this->ID);
-    c->show();
+    changePass = new changePassword(this->ID);
+    changePass->show();
 }
 
 void Program::adminChangePassword()
 {
-    changePassword* c = new changePassword(this->ID);
-    c->show();
+    changePass = new changePassword(this->ID);
+    changePass->show();
 }
 
 
