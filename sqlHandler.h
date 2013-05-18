@@ -41,8 +41,7 @@ public:
                 "name TEXT, mathScore FLOAT, physicsScore FLOAT,"
                 " literatureScore FLOAT, theologyScore FLOAT, geographyScore FLOAT,"
                 " chemestryScore FLOAT, disciplinaryScore FLOAT, classID INT)");
-        query.exec("create table if not exists delay(studentId int, "
-                "time FLOAT)");
+        query.exec("create table if not exists delay(sId INT, time FLOAT)");
 
         if (isFirst)
         {
@@ -51,9 +50,10 @@ public:
             query.exec("insert into password values(2, 'gholtogh', 'pedar dar biar', 0)");
             query.exec("insert into password values(3, 'zaalooo', 'reza xerse xaste', 0)");
             query.exec("insert into password values(4, 'pashmak', 'golabi', 0)");
-            query.exec("INSERT INTO person values(2, 'قولتوق', 2, -1)");
-            query.exec("INSERT INTO person values(3, 'زالو', 2, -1)");
-            query.exec("INSERT INTO person values(4, 'پشمک', 2, -1)");
+            query.exec("INSERT INTO delay values(0, 4.1)");
+            query.exec("INSERT INTO person values(2, 'قولتوق', 2, -2)");
+            query.exec("INSERT INTO person values(3, 'زالو', 2, -2)");
+            query.exec("INSERT INTO person values(4, 'پشمک', 2, -2)");
             query.exec("INSERT INTO student values(0, 'هولن', 0, 0, 0, 0, 0, 0, 0, -1)");
             query.exec("INSERT INTO student values(1, 'بیل', 0, 0, 0, 0, 0, 0, 0, -1)");
             query.exec("INSERT INTO student values(2, 'قلیدون', 0, 0, 0, 0, 0, 0, 0, -1)");
@@ -159,7 +159,7 @@ public:
     {
         QSqlQuery query;
 
-        query.prepare("insert into delay values(?, ?)");
+        query.prepare("INSERT INTO delay values(?, ?)");
         query.addBindValue(sId);
         query.addBindValue(delayTime);
 
@@ -175,11 +175,14 @@ public:
         query.addBindValue(sId);
         query.exec();
 
-        query.first();
-        delays.push_back(query.value(0).toFloat());
-        while (query.next())
+        if (query.isValid())
         {
+            query.first();
             delays.push_back(query.value(0).toFloat());
+            while (query.next())
+            {
+                delays.push_back(query.value(0).toFloat());
+            }
         }
 
         return delays;
@@ -308,10 +311,17 @@ public:
         return query.exec();
     }
 
-    void removeStudent(int id)
+    void removeStudent(int id, bool is_admin)
     {
         QSqlQuery query;
-        query.prepare("DELETE FROM student WHERE id=?");
+        if (is_admin)
+        {
+            query.prepare("DELETE FROM student WHERE id=?");
+        }
+        else
+        {
+            query.prepare("UPDATE student SET classID=-1 WHERE id=?");
+        }
         query.addBindValue(id);
         query.exec();
     }

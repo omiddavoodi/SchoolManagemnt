@@ -45,13 +45,13 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
     if (this->is_admin)
         this->setFixedSize(480, 275);
     else
-        this->setFixedSize(240, 275);
+        this->setFixedSize(240, 245);
     this->setWindowTitle("IUST School!");
     std::vector<QString> names;
     if (is_admin)
     {
         grpTeachers = new QGroupBox(this);
-        grpTeachers->setGeometry(245, 10, 233,260);
+        grpTeachers->setGeometry(245, 3, 233,100);
 
         teachersCombo = new QComboBox();
 
@@ -62,32 +62,32 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
             teachersCombo->addItem(names[i],i);
         }
         teachersCombo->setParent(grpTeachers);
-        teachersCombo->setGeometry(10,2,140,24);
+        teachersCombo->setGeometry(10,2,140,20);
 
         tempTeacherName = teachersCombo->itemText(teachersCombo->currentIndex());
 
         connect(teachersCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(UpdateTeacherData()));
 
         label1 = new QLabel("معلم");
-        label1->setGeometry(158, 2, 60, 24);
+        label1->setGeometry(158, 2, 60, 20);
         label1->setParent(grpTeachers);
 
         label2 = new QLabel("نام:");
-        label2->setGeometry(158, 30, 60, 24);
+        label2->setGeometry(158, 24, 60, 20);
         label2->setParent(grpTeachers);
 
         label3 = new QLabel();
-        label3->setGeometry(10, 30, 140, 24);
+        label3->setGeometry(10, 24, 140, 20);
         label3->setAlignment(Qt::AlignLeft | Qt::AlignCenter);
         label3->setText(tempTeacherName);
         label3->setParent(grpTeachers);
 
         label4 = new QLabel("کلاس فعلی:");
-        label4->setGeometry(158, 60, 60, 24);
+        label4->setGeometry(158, 48, 60, 20);
         label4->setParent(grpTeachers);
 
         label5 = new QLabel();
-        label5->setGeometry(10, 60, 140, 24);
+        label5->setGeometry(10, 48, 140, 20);
         label5->setAlignment(Qt::AlignHCenter | Qt::AlignCenter);
         label5->setText(getClassName(sql.getTeacherClass(tempTeacherName)));
         label5->setParent(grpTeachers);
@@ -106,17 +106,28 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
         classCombo->addItem("6/1");
         classCombo->addItem("6/2");
         classCombo->setParent(grpTeachers);
-        classCombo->setGeometry(10,90,140,24);
+        classCombo->setGeometry(10,72,140,20);
 
         btnAddTeacherToClass = new QPushButton("تخصیص");
-        btnAddTeacherToClass->setGeometry(160, 90, 60, 24);
+        btnAddTeacherToClass->setGeometry(160, 72, 60, 20);
         btnAddTeacherToClass->setParent(grpTeachers);
 
         connect(btnAddTeacherToClass, SIGNAL(clicked()), this, SLOT(bindTeacher()));
+
+        grpDelays = new QGroupBox(this);
+        grpDelays->setGeometry(245, 107, 233,100);
+
+        btnFileDelayForStudent = new QPushButton("ثبت تاخیر برای دانش آموز", grpDelays);
+        btnFileDelayForStudent->setGeometry(10, 5, 220, 24);
+
+        connect(btnFileDelayForStudent, SIGNAL(clicked()), this, SLOT(addDelay()));
+
+        delaysList = new QListWidget(grpDelays);
+        delaysList->setGeometry(10, 35, 220, 60);
     }
 
     grpStudents = new QGroupBox(this);
-    grpStudents->setGeometry(5, 10, 233,260);
+    grpStudents->setGeometry(5, 3, 233,260);
 
     studentsCombo = new QComboBox();
 
@@ -254,41 +265,61 @@ Program::Program(bool isadmin, int userid, QWidget *parent)
 
     connect(btnAddStudentToClass, SIGNAL(clicked()), this, SLOT(bindStudent()));
 
-    btnAddStudent = new QPushButton("اضافه کردن دانش آموز جدید");
-    btnAddStudent->setGeometry(70, 170, 150, 24);
-    btnAddStudent->setParent(grpStudents);
-
-    connect(btnAddStudent, SIGNAL(clicked()), this, SLOT(addNewStudent()));
-
-    btnRemoveStudent = new QPushButton("حذف کردن دانش آموز کنونی");
-    btnRemoveStudent->setGeometry(70, 200, 150, 24);
-    btnRemoveStudent->setParent(grpStudents);
-
-    connect(btnRemoveStudent, SIGNAL(clicked()), this, SLOT(removeCurrentStudent()));
-
-    btnScoring = new QPushButton("نمره دهی");
-    btnScoring->setGeometry(140, 230, 80, 24);
-    btnScoring->setParent(grpStudents);
-
-    connect(btnScoring, SIGNAL(clicked()), this, SLOT(setStudentScore()));
-
-    coursesCombo = new QComboBox();
     if (is_admin)
     {
+        btnAddStudent = new QPushButton("اضافه کردن دانش آموز جدید");
+        btnAddStudent->setGeometry(70, 170, 150, 24);
+        btnAddStudent->setParent(grpStudents);
+
+        connect(btnAddStudent, SIGNAL(clicked()), this, SLOT(addNewStudent()));
+
+        btnRemoveStudent = new QPushButton("حذف کردن دانش آموز کنونی");
+        btnRemoveStudent->setGeometry(70, 200, 150, 24);
+        btnRemoveStudent->setParent(grpStudents);
+
+        connect(btnRemoveStudent, SIGNAL(clicked()), this, SLOT(removeCurrentStudent()));
+
+        btnScoring = new QPushButton("نمره دهی");
+        btnScoring->setGeometry(140, 230, 80, 24);
+        btnScoring->setParent(grpStudents);
+
+        connect(btnScoring, SIGNAL(clicked()), this, SLOT(setStudentScore()));
+
+        coursesCombo = new QComboBox();
+
         coursesCombo->addItem("انظباط", 6);
+
+        coursesCombo->setParent(grpStudents);
+        coursesCombo->setGeometry(10,230,120,24);
+
+        update_delays();
     }
     else
     {
+        btnRemoveStudent = new QPushButton("اخراج دانش آموز کنونی");
+        btnRemoveStudent->setGeometry(70, 170, 150, 24);
+        btnRemoveStudent->setParent(grpStudents);
+
+        connect(btnRemoveStudent, SIGNAL(clicked()), this, SLOT(removeCurrentStudent()));
+
+        btnScoring = new QPushButton("نمره دهی");
+        btnScoring->setGeometry(140, 200, 80, 24);
+        btnScoring->setParent(grpStudents);
+
+        connect(btnScoring, SIGNAL(clicked()), this, SLOT(setStudentScore()));
+
+        coursesCombo = new QComboBox();
+
         coursesCombo->addItem("ریاضی", 0);
         coursesCombo->addItem("فیزیک", 1);
         coursesCombo->addItem("فارسی", 2);
         coursesCombo->addItem("دینی", 3);
         coursesCombo->addItem("جغرافی", 4);
         coursesCombo->addItem("شیمی", 5);
-    }
 
-    coursesCombo->setParent(grpStudents);
-    coursesCombo->setGeometry(10,230,120,24);
+        coursesCombo->setParent(grpStudents);
+        coursesCombo->setGeometry(10,200,120,24);
+    }
 }
 
 
@@ -313,6 +344,7 @@ void Program::UpdateStudentData()
     QString tempName = studentsCombo->itemText(studentsCombo->currentIndex());
     label3s->setText(tempName);
     label5s->setText(getClassName(sql.getStudentClass(tempName)));
+    update_delays();
     update_student_scores();
 }
 
@@ -347,7 +379,7 @@ void Program::addNewStudent()
 
 void Program::removeCurrentStudent()
 {
-    sql.removeStudent(studentsCombo->itemData(studentsCombo->currentIndex()).toInt());
+    sql.removeStudent(studentsCombo->itemData(studentsCombo->currentIndex()).toInt(), is_admin);
     studentsCombo->clear();
     std::vector<int> ids = sql.getStudentIDs(user_id);
     std::vector<QString>names = sql.getStudentNames(user_id);
@@ -356,6 +388,7 @@ void Program::removeCurrentStudent()
     {
         studentsCombo->addItem(names[i],ids[i]);
     }
+    update_delays();
 }
 
 void Program::update_student_scores()
@@ -389,6 +422,29 @@ void Program::setStudentScore()
     {
         sql.setStudentScore(studentsCombo->itemData(studentsCombo->currentIndex()).toInt(),coursesCombo->itemData(coursesCombo->currentIndex()).toInt(),score);
         update_student_scores();
+    }
+}
+
+void Program::addDelay()
+{
+    QInputDialog message;
+    bool ok;
+    float score = message.getDouble(this, "تاخیر",
+                                   "مقدار زمان تاخیر را وارد کنید",0,0,200,2 ,&ok);
+    if (ok == true)
+    {
+        sql.addDelay(studentsCombo->itemData(studentsCombo->currentIndex()).toInt(),score);
+        update_delays();
+    }
+}
+
+void Program::update_delays()
+{
+    delaysList->clear();
+    std::vector<float> temp = sql.getAllDelays(studentsCombo->itemData(studentsCombo->currentIndex()).toInt());
+    for (int i = 0; i < temp.size(); ++i)
+    {
+        delaysList->addItem(QVariant(temp[i]).toString());
     }
 }
 

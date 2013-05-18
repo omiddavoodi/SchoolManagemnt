@@ -13,6 +13,7 @@
 #include <QGroupBox>
 #include "sqlHandler.h"
 #include <QInputDialog>
+#include <QListWidget>
 
 class Program : public QWidget
 {
@@ -26,7 +27,6 @@ public:
     bool is_admin;
     int user_id;
 
-    QTabBar* userTab;
     QGridLayout* layout;
     QGridLayout* classLayout;
     QComboBox* classCombo;
@@ -34,6 +34,7 @@ public:
     QPushButton* btnAddTeacherToClass;
     QGroupBox* grpTeachers;
     QGroupBox* grpStudents;
+    QGroupBox* grpDelays;
     QLabel* label1;
     QLabel* label2;
     QLabel* label3;
@@ -61,14 +62,17 @@ public:
     QLabel* label20s;
     QLabel* label21s;
     QPushButton* btnAddStudentToClass;
+    QPushButton* btnFileDelayForStudent;
     QComboBox* classSCombo;
     QComboBox* studentsCombo;
     QPushButton* btnAddStudent;
     QPushButton* btnRemoveStudent;
     QPushButton* btnScoring;
     QComboBox* coursesCombo;
+    QListWidget* delaysList;
 
     void update_student_scores();
+    void update_delays();
     ~Program();
 
 public slots:
@@ -79,6 +83,7 @@ public slots:
     void addNewStudent();
     void removeCurrentStudent();
     void setStudentScore();
+    void addDelay();
 };
 
 #endif // PROGRAM_H
