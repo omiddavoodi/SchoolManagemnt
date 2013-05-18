@@ -158,12 +158,21 @@ public:
     void addDelay(int sId,float delayTime)
     {
         QSqlQuery query;
-
+        qDebug() << sId << " : " << delayTime;
         query.prepare("INSERT INTO delay values(?, ?)");
         query.addBindValue(sId);
         query.addBindValue(delayTime);
 
         query.exec();
+        qDebug() << sId << " : " << delayTime;
+
+        query.prepare("SELECT time FROM delay WHERE id=?");
+        query.addBindValue(sId);
+        query.exec();
+        query.first();
+        qDebug() << sId << " : " << query.value(0).toFloat();
+
+
     }
 
     std::vector<float> getAllDelays(int sId)
@@ -174,14 +183,17 @@ public:
         query.prepare("SELECT time FROM delay WHERE sId=?");
         query.addBindValue(sId);
         query.exec();
+        query.first();
+        qDebug() << " : " <<query.value(0).toFloat();
 
         if (query.isValid())
         {
-            query.first();
             delays.push_back(query.value(0).toFloat());
             while (query.next())
             {
                 delays.push_back(query.value(0).toFloat());
+                qDebug() <<query.value(0).toFloat();
+
             }
         }
 

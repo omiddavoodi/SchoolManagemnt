@@ -441,10 +441,15 @@ void Program::addDelay()
 void Program::update_delays()
 {
     delaysList->clear();
-    std::vector<float> temp = sql.getAllDelays(studentsCombo->itemData(studentsCombo->currentIndex()).toInt());
-    for (int i = 0; i < temp.size(); ++i)
+    if (studentsCombo->count() != 0)
     {
-        delaysList->addItem(QVariant(temp[i]).toString());
+        std::vector<float> temp = sql.getAllDelays(studentsCombo->itemData(studentsCombo->currentIndex()).toInt());
+
+        for (int i = 0; i < temp.size(); ++i)
+        {
+
+            delaysList->addItem(QVariant(temp[i]).toString());
+        }
     }
 }
 
